@@ -19,8 +19,10 @@ public class ActionsUtil {
       "Explain", "Explain the following code: {{selectedCode}}",
       "Refactor", "Refactor the following code: {{selectedCode}}",
       "Optimize", "Optimize the following code: {{selectedCode}}",
-          "Change to Java", "create a java class by converting this ruby code i am also using springboot with java including import statements\n" +
-                  "after that list the ruby functions names being called from within it, list only my custom function's names not those of dependencies: {{selectedCode}}"));
+         "Convert To Java", "create a java function by converting this ruby code i am also using springboot autowired, lombok for getter/setter/constructor/json so use the features in these. \n" +
+                  "Do not implement the inner functions, only implement get_slot_details_info.\n" +
+                  "follow above rules strictly\n" +
+                  "after that list the ruby functions names being called from within it , list only my custom function's names not those of dependencies: {{selectedCode}}"));
 
   public static String[][] DEFAULT_ACTIONS_ARRAY = toArray(DEFAULT_ACTIONS);
 
