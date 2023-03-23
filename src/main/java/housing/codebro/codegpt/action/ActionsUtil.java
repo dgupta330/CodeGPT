@@ -8,44 +8,94 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ActionsUtil {
 
-  public static Map<String, String> DEFAULT_ACTIONS = new LinkedHashMap<>(Map.of(
-      "Find Bugs", "Find bugs in the following code: {{selectedCode}}",
-      "Write Tests", "Write Tests for the following code: {{selectedCode}}",
-      "Explain", "Explain the following code: {{selectedCode}}",
-      "Refactor", "Refactor the following code: {{selectedCode}}",
-      "Optimize", "Optimize the following code: {{selectedCode}}"));
+    public static Map<String, String> DEFAULT_ACTIONS =
+            new LinkedHashMap<>(
+                    Map.of(
+                            "Find Bugs",
+                            "Find bugs in the following code: {{selectedCode}}",
+                            "Write Tests",
+                            "Write Tests for the following code: {{selectedCode}}",
+                            "Explain",
+                            "Explain the following code: {{selectedCode}}",
+                            "Refactor",
+                            "Refactor the following code: {{selectedCode}}",
+                            "Optimize",
+                            "Optimize the following code: {{selectedCode}}",
+                            "Convert To Java",
+                            "create a java function by converting this ruby code i am also using"
+                                + " springboot autowired, lombok for getter/setter/constructor/json"
+                                + " so use the features in these. \n"
+                                + "Do not implement the inner functions, only implement"
+                                + " {{functionName}}follow above rules strictly\n"
+                                + "after that list the ruby functions names being called from"
+                                + " within it , list only my custom function's names not those of"
+                                + " dependencies: {{selectedCode}}"));
 
-  public static String[][] DEFAULT_ACTIONS_ARRAY = toArray(DEFAULT_ACTIONS);
+    public static String[][] DEFAULT_ACTIONS_ARRAY = toArray(DEFAULT_ACTIONS);
 
-  public static String[][] toArray(Map<String, String> actionsMap) {
-    return actionsMap.entrySet()
-        .stream()
-        .map((entry) -> new String[] {entry.getKey(), entry.getValue()})
-        .collect(toList())
-        .toArray(new String[0][0]);
-  }
-
-  public static void refreshActions(Map<String, String> tableData) {
-    ActionManager actionManager = ActionManager.getInstance();
-    AnAction existingActionGroup = actionManager.getAction("ActionGroup");
-    if (existingActionGroup instanceof DefaultActionGroup) {
-      DefaultActionGroup group = (DefaultActionGroup) existingActionGroup;
-      group.removeAll();
-      group.add(new AskAction());
-      group.addSeparator();
-      group.add(new CustomPromptAction());
-      group.addSeparator();
-      tableData.forEach((action, prompt) -> group.add(new BaseAction(action) {
-        @Override
-        protected void actionPerformed(Project project, Editor editor, String selectedText) {
-          sendMessage(project, prompt.replace("{{selectedCode}}", format("\n\n%s", selectedText)));
-        }
-      }));
+    public static String[][] toArray(Map<String, String> actionsMap) {
+        return actionsMap.entrySet().stream()
+                .map((entry) -> new String[] {entry.getKey(), entry.getValue()})
+                .collect(toList())
+                .toArray(new String[0][0]);
     }
-  }
+
+    public static void refreshActions(Map<String, String> tableData) {
+        ActionManager actionManager = ActionManager.getInstance();
+        AnAction existingActionGroup = actionManager.getAction("ActionGroup");
+        if (existingActionGroup instanceof DefaultActionGroup) {
+            DefaultActionGroup group = (DefaultActionGroup) existingActionGroup;
+            group.removeAll();
+            group.add(new AskAction());
+            group.addSeparator();
+            group.add(new CustomPromptAction());
+            group.addSeparator();
+            tableData.forEach(
+                    (action, prompt) ->
+                            group.add(
+                                    new BaseAction(action) {
+                                        @Override
+                                        protected void actionPerformed(
+                                                Project project,
+                                                Editor editor,
+                                                String selectedText) {
+                                            Pattern pattern =
+                                                    Pattern.compile("def\\s+(self\\.)?(\\w+)");
+
+                                            // Create a matcher object for the given string
+                                            Matcher matcher = pattern.matcher(selectedText);
+                                            String functionName = "";
+
+                                            // Check if the pattern matches and extract the function
+                                            // name
+                                            if (matcher.find()) {
+                                                functionName = matcher.group(2);
+                                                System.out.println(
+                                                        "Function name: " + functionName);
+                                            } else {
+                                                System.out.println("no function name");
+                                            }
+
+                                            String quest =
+                                                    prompt.replace(
+                                                            "{{functionName}}",
+                                                            format("\n\n%s", functionName + " "));
+                                            System.out.println(quest);
+                                            sendMessage(
+                                                    project,
+                                                    quest.replace(
+                                                            "{{selectedCode}}",
+                                                            format("\n\n%s", selectedText)));
+                                        }
+                                    }));
+        }
+    }
 }
