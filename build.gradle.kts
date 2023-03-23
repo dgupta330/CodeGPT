@@ -4,11 +4,12 @@ plugins {
 }
 
 
-group = "ee.carlrobert"
+group = "housing.codebro"
 version = "1.7.3"
 
 repositories {
   mavenCentral()
+  mavenLocal()
 }
 
 intellij {
