@@ -18,7 +18,9 @@ public class ActionsUtil {
       "Write Tests", "Write Tests for the following code: {{selectedCode}}",
       "Explain", "Explain the following code: {{selectedCode}}",
       "Refactor", "Refactor the following code: {{selectedCode}}",
-      "Optimize", "Optimize the following code: {{selectedCode}}"));
+      "Optimize", "Optimize the following code: {{selectedCode}}",
+          "Change to Java", "create a java class by converting this ruby code i am also using springboot with java including import statements\n" +
+                  "after that list the ruby functions names being called from within it, list only my custom function's names not those of dependencies: {{selectedCode}}"));
 
   public static String[][] DEFAULT_ACTIONS_ARRAY = toArray(DEFAULT_ACTIONS);
 
