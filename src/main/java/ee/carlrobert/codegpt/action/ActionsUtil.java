@@ -20,7 +20,7 @@ public class ActionsUtil {
       "Refactor", "Refactor the following code: {{selectedCode}}",
       "Optimize", "Optimize the following code: {{selectedCode}}",
          "Convert To Java", "create a java function by converting this ruby code i am also using springboot autowired, lombok for getter/setter/constructor/json so use the features in these. \n" +
-                  "Do not implement the inner functions, only implement get_slot_details_info.\n" +
+                  "Do not implement the inner functions" +
                   "follow above rules strictly\n" +
                   "after that list the ruby functions names being called from within it , list only my custom function's names not those of dependencies: {{selectedCode}}"));
 
