@@ -3,8 +3,9 @@ plugins {
   id("org.jetbrains.intellij") version "1.13.1"
 }
 
-group = "codebro"
-version = "1.7.2"
+
+group = "ee.carlrobert"
+version = "1.7.3"
 
 repositories {
   mavenCentral()
