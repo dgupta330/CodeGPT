@@ -16,15 +16,17 @@ import java.util.regex.Pattern;
 public class ActionsUtil {
 
   public static Map<String, String> DEFAULT_ACTIONS = new LinkedHashMap<>(Map.of(
+
+      "Convert To Java", "create a java function by converting this ruby code i am also using springboot autowired, lombok for getter/setter/constructor/json so use the features in these. \n" +
+              "Do not implement the inner functions, only implement {{functionName}}" +
+              "follow above rules strictly\n" +
+              "after that list the ruby functions names being called from within it , list only my custom function's names not those of dependencies: {{selectedCode}}",
+      "Create Java Entity", "create a Jpa Entity from following snippet, use annotations like @Table etc and lombok: {{selectedCode}}",
       "Find Bugs", "Find bugs in the following code: {{selectedCode}}",
       "Write Tests", "Write Tests for the following code: {{selectedCode}}",
       "Explain", "Explain the following code: {{selectedCode}}",
       "Refactor", "Refactor the following code: {{selectedCode}}",
-      "Optimize", "Optimize the following code: {{selectedCode}}",
-         "Convert To Java", "create a java function by converting this ruby code i am also using springboot autowired, lombok for getter/setter/constructor/json so use the features in these. \n" +
-                  "Do not implement the inner functions, only implement {{functionName}}" +
-                  "follow above rules strictly\n" +
-                  "after that list the ruby functions names being called from within it , list only my custom function's names not those of dependencies: {{selectedCode}}"));
+      "Optimize", "Optimize the following code: {{selectedCode}}"));
 
   public static String[][] DEFAULT_ACTIONS_ARRAY = toArray(DEFAULT_ACTIONS);
 
