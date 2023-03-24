@@ -10,10 +10,18 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ActionsUtil {
 
   public static Map<String, String> DEFAULT_ACTIONS = new LinkedHashMap<>(Map.of(
+
+      "Convert To Java", "create a java function by converting this ruby code i am also using springboot autowired, lombok for getter/setter/constructor/json so use the features in these. \n" +
+              "Do not implement the inner functions, only implement {{functionName}}" +
+              "follow above rules strictly\n" +
+              "after that list the ruby functions names being called from within it , list only my custom function's names not those of dependencies: {{selectedCode}}",
+      "Create Java Entity", "create a Jpa Entity from following snippet, use annotations like @Table etc and lombok: {{selectedCode}}",
       "Find Bugs", "Find bugs in the following code: {{selectedCode}}",
       "Write Tests", "Write Tests for the following code: {{selectedCode}}",
       "Explain", "Explain the following code: {{selectedCode}}",
@@ -43,7 +51,23 @@ public class ActionsUtil {
       tableData.forEach((action, prompt) -> group.add(new BaseAction(action) {
         @Override
         protected void actionPerformed(Project project, Editor editor, String selectedText) {
-          sendMessage(project, prompt.replace("{{selectedCode}}", format("\n\n%s", selectedText)));
+          Pattern pattern = Pattern.compile("def\\s+(self\\.)?(\\w+)");
+
+          // Create a matcher object for the given string
+          Matcher matcher = pattern.matcher(selectedText);
+          String functionName = "";
+
+          // Check if the pattern matches and extract the function name
+          if (matcher.find()) {
+             functionName = matcher.group(2);
+            System.out.println("Function name: " + functionName);
+          } else {
+            System.out.println("no function name");
+          }
+
+          String quest = prompt.replace("{{functionName}}", format("\n\n%s", functionName + " "));
+          System.out.println(quest);
+          sendMessage(project, quest.replace("{{selectedCode}}", format("\n\n%s", selectedText)));
         }
       }));
     }
